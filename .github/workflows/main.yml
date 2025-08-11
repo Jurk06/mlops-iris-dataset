@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
   build-and-run:
@@ -30,11 +30,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Run ML script
-      - name: Run ML pipeline
+      # 4. Run tests (dataset validation)
+      - name: Run dataset tests
+        run: python test.py
+
+      # 5. Run ML training pipeline
+      - name: Run ML training
         run: python train_model.py
 
-      # 5. Upload artifacts (plots + scores)
+      # 6. Upload all output artifacts
       - name: Upload output artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -43,3 +47,4 @@ jobs:
             ConfusionMatrix.png
             FeatureImportance.png
             scores.txt
+            test.txt
